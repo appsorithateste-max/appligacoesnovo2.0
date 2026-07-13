@@ -114,7 +114,10 @@
   <div class="topbar"><button class="back-icon" data-goto="home">←</button><h1>Discagem</h1></div>
   <div class="card" id="dialer-card"></div>
   <a id="btn-call-now" class="btn btn-primary btn-lg" href="tel:" style="text-decoration:none;box-sizing:border-box">📞 Ligar agora</a>
-  <button class="btn btn-ghost" id="btn-skip-contact" style="margin-top:6px">Pular este contato →</button>
+  <div style="display:flex;gap:8px;margin-top:6px">
+    <button class="btn btn-ghost" id="btn-undo-skip" style="flex:1" disabled>← Voltar ao anterior</button>
+    <button class="btn btn-ghost" id="btn-skip-contact" style="flex:1">Pular este contato →</button>
+  </div>
 </section>
 
 <!-- REGISTRO DA LIGAÇÃO -->
