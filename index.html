@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Prospecta - CRM de Prospecção</title>
+<meta name="theme-color" content="#246BFD">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- SPLASH -->
+<section id="scr-splash" class="screen">
+  <div style="width:64px;height:64px;border-radius:18px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px">📞</div>
+  <p style="font-size:20px;font-weight:700;margin:0">Prospecta</p>
+  <p style="font-size:13px;opacity:.85;margin:4px 0 0">Ligar. Registrar. Vender.</p>
+</section>
+
+<!-- BOAS-VINDAS -->
+<section id="scr-welcome" class="screen">
+  <div style="min-height:80vh;display:flex;flex-direction:column;justify-content:center;text-align:center">
+    <p style="font-size:22px;font-weight:700;margin:0 0 10px">Grandes negócios começam com uma conversa.</p>
+    <p class="label" style="margin:0 0 26px">A próxima ligação pode mudar seu mês.</p>
+    <button class="btn btn-primary" data-goto="identification">Começar</button>
+  </div>
+</section>
+
+<!-- IDENTIFICAÇÃO -->
+<section id="scr-identification" class="screen">
+  <div class="topbar"><h1>Vamos te conhecer</h1></div>
+  <form id="form-identification">
+    <div class="field"><label class="label">Nome do vendedor</label>
+      <input class="input" name="nome" required placeholder="Seu nome"></div>
+    <div class="field"><label class="label">Meta diária de ligações</label>
+      <input class="input" name="metaLigacoes" type="number" required value="80"></div>
+    <div class="field"><label class="label">Meta diária de reuniões</label>
+      <input class="input" name="metaReunioes" type="number" required value="5"></div>
+    <button class="btn btn-primary" type="submit">Entrar</button>
+  </form>
+</section>
+
+<!-- HOME -->
+<section id="scr-home" class="screen">
+  <p style="font-size:18px;font-weight:700;margin:0">Bom dia, <span id="home-username">Vendedor</span></p>
+  <p class="label" style="margin:2px 0 16px;text-transform:capitalize" id="home-date"></p>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between" class="label"><span>Ligações</span><span id="calls-label">0 / 0</span></div>
+    <div class="progress"><div id="progress-calls" style="width:0%;background:var(--blue)"></div></div>
+    <div style="display:flex;justify-content:space-between;margin-top:8px" class="label"><span>Reuniões</span><span id="meetings-label">0 / 0</span></div>
+    <div class="progress"><div id="progress-meetings" style="width:0%;background:var(--green)"></div></div>
+  </div>
+  <button class="btn btn-primary" data-goto="dialer" style="margin-bottom:8px">Continuar ligações</button>
+  <button class="btn btn-secondary" data-goto="lists" style="margin-bottom:8px">Minhas listas</button>
+  <button class="btn btn-secondary" data-goto="reports" style="margin-bottom:8px">Relatórios</button>
+  <button class="btn btn-secondary" data-goto="achievements" style="margin-bottom:8px">Conquistas</button>
+  <button class="btn btn-secondary" data-goto="settings">Configurações</button>
+</section>
+
+<!-- MINHAS LISTAS -->
+<section id="scr-lists" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="home">←</button><h1>Minhas listas</h1></div>
+  <div id="lists-container"></div>
+  <button class="btn btn-primary" data-goto="import">Nova lista</button>
+</section>
+
+<!-- IMPORTAR -->
+<section id="scr-import" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="lists">←</button><h1>Importar contatos</h1></div>
+  <form id="form-import">
+    <div class="field"><label class="label">Nome da lista</label>
+      <input class="input" name="listName" required placeholder="Ex: Leads Julho - Sudeste"></div>
+
+    <div class="field">
+      <label class="label">Enviar arquivo (CSV ou Excel)</label>
+      <input class="input" id="import-file" type="file" accept=".csv,.xlsx,.xls" style="padding:10px">
+      <p class="label" id="import-file-info" style="margin-top:6px"></p>
+      <p class="label" style="margin-top:2px">A primeira linha deve ter os nomes das colunas: nome, telefone, empresa, cidade, cargo, observacoes (empresa, cidade, cargo e observacoes são opcionais).</p>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--muted);font-size:12px">
+      <div style="flex:1;height:1px;background:var(--border)"></div>ou cole manualmente<div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>
+
+    <div class="field">
+      <label class="label">Cole os contatos (nome, telefone, empresa, cidade — um por linha)</label>
+      <textarea class="input" name="rawData" style="min-height:90px"
+        placeholder="Marcos Andrade, 31998872211, Construtora Vitale, Belo Horizonte"></textarea>
+    </div>
+    <p class="label">Campos obrigatórios: nome e telefone. Colunas extras são preservadas na planilha.</p>
+    <button class="btn btn-primary" type="submit" id="btn-import-submit">Importar lista</button>
+    <div id="import-progress" style="display:none;margin-top:14px;text-align:center">
+      <span class="spinner" style="border-top-color:var(--blue);border-color:rgba(36,107,253,.2)"></span>
+      <p style="font-size:13px;font-weight:600;margin:8px 0 0" id="import-progress-text">Importando contatos...</p>
+      <p class="label" style="color:var(--red);margin-top:4px">Não feche nem saia do app até essa mensagem sumir.</p>
+    </div>
+  </form>
+</section>
+
+<!-- RESUMO DA LISTA -->
+<section id="scr-summary" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="lists">←</button><h1 id="summary-list-name">Lista</h1></div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between" class="label"><span>Contatos</span><span id="summary-list-count">-</span></div>
+  </div>
+  <button class="btn btn-primary" data-goto="dialer">Começar ligações</button>
+</section>
+
+<!-- DISCADOR -->
+<section id="scr-dialer" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="home">←</button><h1>Discagem</h1></div>
+  <div class="card" id="dialer-card"></div>
+  <a id="btn-call-now" class="btn btn-primary btn-lg" href="tel:" style="text-decoration:none;box-sizing:border-box">📞 Ligar agora</a>
+  <button class="btn btn-ghost" id="btn-skip-contact" style="margin-top:6px">Pular este contato →</button>
+</section>
+
+<!-- REGISTRO DA LIGAÇÃO -->
+<section id="scr-log" class="screen">
+  <div class="topbar"><h1>Como foi a ligação?</h1></div>
+  <form id="form-log">
+    <input type="hidden" name="status" id="selected-status">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px">
+      <span class="status-chip" data-status="Não atendeu">Não atendeu</span>
+      <span class="status-chip" data-status="Caixa postal">Caixa postal</span>
+      <span class="status-chip" data-status="Telefone incorreto">Telefone incorreto</span>
+      <span class="status-chip" data-status="Sem interesse">Sem interesse</span>
+      <span class="status-chip" data-status="Retornar depois">Retornar depois</span>
+      <span class="status-chip" data-status="Reunião agendada">Reunião agendada</span>
+      <span class="status-chip" data-status="Venda realizada">Venda realizada</span>
+      <span class="status-chip" data-status="Outro">Outro</span>
+    </div>
+    <div class="field"><label class="label">Resumo da ligação</label>
+      <textarea class="input" name="resumo" style="min-height:70px"></textarea></div>
+    <div class="field"><label class="label">Próxima data de retorno</label>
+      <input class="input" name="proximaData" type="date"></div>
+    <button class="btn btn-success" type="submit">Salvar e próximo</button>
+  </form>
+</section>
+
+<!-- WHATSAPP -->
+<section id="scr-whats" class="screen">
+  <div class="topbar"><h1>Enviar mensagem</h1></div>
+  <p class="label" style="margin:-6px 0 12px">Para <span id="whats-contact-name"></span></p>
+  <button class="btn btn-secondary" style="margin-bottom:8px;text-align:left" data-wa-template="Obrigado pelo atendimento!">Obrigado pelo atendimento</button>
+  <button class="btn btn-secondary" style="margin-bottom:8px;text-align:left" data-wa-template="Segue a apresentação que conversamos.">Segue apresentação</button>
+  <button class="btn btn-secondary" style="margin-bottom:8px;text-align:left" data-wa-template="Confirmando nossa reunião.">Confirmando reunião</button>
+  <button class="btn btn-secondary" style="margin-bottom:8px;text-align:left" data-wa-template="Retorno amanhã, combinado!">Retorno amanhã</button>
+  <button class="btn btn-secondary" style="margin-bottom:16px;text-align:left" data-wa-template="Foi um prazer falar com você!">Prazer falar com você</button>
+  <button class="btn btn-primary" data-goto="dialer">Próximo contato</button>
+</section>
+
+<!-- HISTÓRICO -->
+<section id="scr-history" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="dialer">←</button><h1>Histórico</h1></div>
+  <p class="label" style="margin:-6px 0 12px" id="history-contact-name"></p>
+  <div id="history-container"></div>
+</section>
+
+<!-- RELATÓRIOS -->
+<section id="scr-reports" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="home">←</button><h1>Relatórios</h1></div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <span class="status-chip report-tab selected" data-period="daily">Diário</span>
+    <span class="status-chip report-tab" data-period="weekly">Semanal</span>
+    <span class="status-chip report-tab" data-period="monthly">Mensal</span>
+  </div>
+  <div id="reports-container"></div>
+</section>
+
+<!-- CONQUISTAS -->
+<section id="scr-achievements" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="home">←</button><h1>Conquistas</h1></div>
+  <div id="achievements-container"></div>
+</section>
+
+<!-- CONFIGURAÇÕES -->
+<section id="scr-settings" class="screen">
+  <div class="topbar"><button class="back-icon" data-goto="home">←</button><h1>Configurações</h1></div>
+  <form id="form-settings">
+    <div class="field"><label class="label">Nome do vendedor</label>
+      <input class="input" name="nome" id="settings-nome" placeholder="Seu nome"></div>
+    <div class="field"><label class="label">URL do Apps Script (Web App)</label>
+      <input class="input" name="scriptUrl" id="settings-script-url" placeholder="https://script.google.com/macros/s/.../exec"></div>
+    <div class="field"><label class="label">Meta diária de ligações</label>
+      <input class="input" name="metaLigacoes" id="settings-meta-ligacoes" type="number" value="80"></div>
+    <div class="field"><label class="label">Meta diária de reuniões</label>
+      <input class="input" name="metaReunioes" id="settings-meta-reunioes" type="number" value="5"></div>
+    <button class="btn btn-primary" type="submit">Salvar</button>
+  </form>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
